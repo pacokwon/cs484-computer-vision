@@ -92,7 +92,6 @@ function rgb_img = bayer_to_rgb_bicubic(bayer_img)
         for i = 1:uw:width
             for jh = 1:uh
                 for iw = 1:uw
-%                     fprintf('%d %d\n', j + jh - 1, i + iw - 1);
                     [r, g, b] = compute_average(bayer_img, height, width, j + jh - 1, i + iw - 1, pattern(jh, iw));
                     rgb_img(j + jh - 1, i + iw - 1, 1) = r;
                     rgb_img(j + jh - 1, i + iw - 1, 2) = g;

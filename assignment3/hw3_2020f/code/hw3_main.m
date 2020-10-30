@@ -12,9 +12,6 @@ bayer_img2 = imread(img_path_2);
 img1 = bayer_to_rgb_bicubic(bayer_img1);
 img2 = bayer_to_rgb_bicubic(bayer_img2);
 
-% % img -> (120, 110, 85) | img1 -> (120, 116, 93)
-% % [120 116; 115 93]
-
 % Read matched feature points (n by 2 array)
 feature_point = importdata([data_path, 'feature_points.txt']);
 pts1 = feature_point(1:8,1:2);
@@ -34,7 +31,6 @@ plot(pts2(:,1),pts2(:,2),'go');
 % Find the fundamental matrix form given two feature point sets using the
 % normalized eight-point algorithm
 Fundamental_matrix = calculate_fundamental_matrix(pts1, pts2);
-% Fundamental_matrix = estimateFundamentalMatrix(pts1, pts2, 'Method', 'Norm8Point'); % Correct Behavior!
 
 
 % Find the homography matrix for each left and right camera to project two
@@ -56,16 +52,16 @@ subplot(2,2,[3,4]);
 imshow(stereoAnaglyph(Rectified_img_left, Rectified_img_right));title('Stereo Anaglyph');
 
 
-% %% HW3-d
-% % Generate a disparity map from the two rectified images
-% % You may change the window_size and max_disparity
-% window_size = 5;
-% max_disparity = 40;
-% 
-% gray_img1 = im2double(rgb2gray(Rectified_img_left));
-% gray_img2 = im2double(rgb2gray(Rectified_img_right));
-% 
-% Disparity_map = calculate_disparity_map(gray_img1, gray_img2, window_size, max_disparity);
-% 
-% % Visualize the disparity map
-% figure;imagesc(Disparity_map);colorbar;
+%% HW3-d
+% Generate a disparity map from the two rectified images
+% You may change the window_size and max_disparity
+window_size = 5;
+max_disparity = 40;
+
+gray_img1 = im2double(rgb2gray(Rectified_img_left));
+gray_img2 = im2double(rgb2gray(Rectified_img_right));
+
+Disparity_map = calculate_disparity_map(gray_img1, gray_img2, window_size, max_disparity);
+
+% Visualize the disparity map
+figure;imagesc(Disparity_map);colorbar;
