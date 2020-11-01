@@ -13,34 +13,34 @@ function rgb_img = bayer_to_rgb_bicubic(bayer_img)
             if 2 <= y && y <= w - 1
                 if color == 1 % R
                     R = mat(x, y);
-                    G = (mat(x - 1, y) + mat(x, y - 1) + mat(x, y - 1) + mat(x, y + 1)) / 4;
-                    B = (mat(x - 1, y - 1) + mat(x + 1, y - 1) + mat(x - 1, y + 1) + mat(x + 1, y + 1)) / 4;
+                    G = (mat(x - 1, y) / 4 + mat(x, y - 1) / 4 + mat(x, y - 1) / 4 + mat(x, y + 1) / 4);
+                    B = (mat(x - 1, y - 1) / 4 + mat(x + 1, y - 1) / 4 + mat(x - 1, y + 1) / 4 + mat(x + 1, y + 1) / 4);
                 elseif color == 2 % G
-                    R = (mat(x - 1, y) + mat(x + 1, y)) / 2;
+                    R = (mat(x - 1, y) / 2 + mat(x + 1, y) / 2);
                     G = mat(x, y);
-                    B = (mat(x, y - 1) + mat(x, y + 1)) / 2;
+                    B = (mat(x, y - 1) / 2 + mat(x, y + 1) / 2);
                 else % B
-                    R = (mat(x - 1, y - 1) + mat(x + 1, y - 1) + mat(x - 1, y + 1) + mat(x + 1, y + 1)) / 4;
-                    G = (mat(x - 1, y) + mat(x, y - 1) + mat(x, y - 1) + mat(x, y + 1)) / 4;
+                    R = (mat(x - 1, y - 1) / 4 + mat(x + 1, y - 1) / 4 + mat(x - 1, y + 1) / 4 + mat(x + 1, y + 1) / 4);
+                    G = (mat(x - 1, y) / 4 + mat(x, y - 1) / 4 + mat(x, y - 1) / 4 + mat(x, y + 1) / 4);
                     B = mat(x, y);
                 end
             else
                 if color == 1
                     R = mat(x, y);
-                    G = (mat(x - 1, y) + mat(x, y + 1) + mat(x + 1, y)) / 3;
-                    B = (mat(x - 1, y + 1) + mat(x + 1, y + 1)) / 2;
+                    G = (mat(x - 1, y) / 3 + mat(x, y + 1) / 3 + mat(x + 1, y) / 3);
+                    B = (mat(x - 1, y + 1) / 2 + mat(x + 1, y + 1) / 2);
                 elseif color == 2
                     G = mat(x, y);
                     if y == 1
-                        R = (mat(x - 1, y) + mat(x + 1, y)) / 2;
+                        R = (mat(x - 1, y) / 2 + mat(x + 1, y) / 2);
                         B = mat(x, y + 1);
                     else
                         R = mat(x, y - 1);
-                        B = (mat(x + 1, y) + mat(x - 1, y)) / 2;
+                        B = (mat(x + 1, y) / 2 + mat(x - 1, y) / 2);
                     end
                 else
-                    R = (mat(x - 1, y - 1) + mat(x + 1, y - 1)) / 2;
-                    G = (mat(x - 1, y) + mat(x, y - 1) + mat(x + 1, y)) / 3;
+                    R = (mat(x - 1, y - 1) / 2 + mat(x + 1, y - 1) / 2);
+                    G = (mat(x - 1, y) / 3 + mat(x, y - 1) / 3 + mat(x + 1, y) / 3);
                     B = mat(x, y);
                 end
             end
@@ -48,40 +48,40 @@ function rgb_img = bayer_to_rgb_bicubic(bayer_img)
             if 2 <= y && y <= w - 1
                 if color == 1
                     R = mat(x, y);
-                    G = (mat(x, y - 1) + mat(x + 1, y) + mat(x, y + 1)) / 3;
-                    B = (mat(x + 1, y - 1) + mat(x + 1, y + 1)) / 2;
+                    G = (mat(x, y - 1) / 3 + mat(x + 1, y) / 3 + mat(x, y + 1) / 3);
+                    B = (mat(x + 1, y - 1) / 2 + mat(x + 1, y + 1) / 2);
                 elseif color == 2
                     G = mat(x, y);
                     if x == 1
-                        R = (mat(x, y + 1) + mat(x, y - 1)) / 2;
+                        R = (mat(x, y + 1) / 2 + mat(x, y - 1) / 2);
                         B = mat(x, y + 1);
                     else
                         R = mat(x, y - 1);
-                        B = (mat(x, y - 1) + mat(x, y + 1)) / 2;
+                        B = (mat(x, y - 1) / 2 + mat(x, y + 1) / 2);
                     end
                 else
-                    R = (mat(x - 1, y + 1) + mat(x - 1, y - 1)) / 2;
-                    G = (mat(x, y - 1) + mat(x - 1, y) + mat(x, y + 1)) / 3;
+                    R = (mat(x - 1, y + 1) / 2 + mat(x - 1, y - 1) / 2);
+                    G = (mat(x, y - 1) / 3 + mat(x - 1, y) / 3 + mat(x, y + 1) / 3);
                     B = mat(x, y);
                 end
             else
                 if color == 1
                     R = mat(x, y);
-                    G = (mat(x + 1, y) + mat(x, y + 1)) / 2;
+                    G = (mat(x + 1, y) / 2 + mat(x, y + 1) / 2);
                     B = mat(x + 1, y + 1);
                 elseif color == 2
                     if x == 1
                         R = mat(x, y - 1);
-                        G = (mat(x, y) + mat(x + 1, y - 1)) / 2;
+                        G = (mat(x, y) / 2 + mat(x + 1, y - 1) / 2);
                         B = mat(x + 1, y);
                     else
                         R = mat(x - 1, y);
-                        G = (mat(x, y) + mat(x - 1, y + 1)) / 2;
+                        G = (mat(x, y) / 2 + mat(x - 1, y + 1) / 2);
                         B = mat(x, y + 1);
                     end
                 else
                     R = mat(x - 1, y - 1);
-                    G = (mat(x - 1, y) + mat(x, y - 1)) / 2;
+                    G = (mat(x - 1, y) / 2 + mat(x, y - 1) / 2);
                     B = mat(x, y);
                 end
             end
