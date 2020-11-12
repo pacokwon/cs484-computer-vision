@@ -6,11 +6,11 @@
 % The original code is written by Prof. James Tompkin (james_tompkin@brown.edu).
 % The second version is revised by Prof. Min H. Kim (minhkim@kaist.ac.kr).
 %
-% This is a LaTeX document. LaTeX is a markup language for producing 
-% documents. Your task is to fill out this document, then to compile 
-% it into a PDF document. 
+% This is a LaTeX document. LaTeX is a markup language for producing
+% documents. Your task is to fill out this document, then to compile
+% it into a PDF document.
 %
-% 
+%
 % TO COMPILE:
 % > pdflatex thisfile.tex
 %
@@ -20,10 +20,10 @@
 %   macTex (http://www.tug.org/mactex/) for macOS users.
 %   And TeXstudio(http://www.texstudio.org/) for latex editor.
 %   You should install both compiler and editor for editing latex.
-%   The another option is Overleaf (https://www.overleaf.com/) which is 
+%   The another option is Overleaf (https://www.overleaf.com/) which is
 %   an online latex editor.
 %
-% If you need help with LaTeX, please come to office hours. 
+% If you need help with LaTeX, please come to office hours.
 % Or, there is plenty of help online:
 % https://en.wikibooks.org/wiki/LaTeX
 %
@@ -33,7 +33,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % How to include two graphics on the same line:
-% 
+%
 % \includegraphics[width=0.49\linewidth]{yourgraphic1.png}
 % \includegraphics[width=0.49\linewidth]{yourgraphic2.png}
 %
@@ -42,7 +42,7 @@
 % \begin{equation}
 % y = mx+c
 % \end{equation}
-% 
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[11pt]{article}
@@ -89,62 +89,38 @@
   \item Show and discuss the results of your algorithm.
   \item Feel free to include code snippets, images, and equations.
   \item Use as many pages as you need, but err on the short side If you feel you only need to write a short amount to meet the brief, th
-  
+
   \item \textbf{Please make this document anonymous.}
 \end{itemize}
 
-\section*{In the beginning...}
+\section*{Harris Corner Detection}
+For extracting keypoints from our images, we use the Harris corner detection method. For every pixel, we compute the second moment matrix, then the cornerness using the matrix. With this we have a cornerness value for every pixel. Next, we select a portion of pixels according to predefined threshold value. During this process, we also apply \emph{Non-maxima suppression} to pick peaks to guarantee certain amounts of distance between our keypoints. Finally, we have the keypoints for a single image.
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. See Equation~\ref{eq:one}.
+Aside from absorbing and implementing the algorithm itself, the difficult part for me was selecting the threshold for the cornerness values \emph{C}. There were not many guidelines I could refer to, and the scale of cornerness values were not predictable until I logged out the values to the console to refine it for myself. For the notre dame images, a threshold of 1000 gave reasonable amounts(between 1,000 ~ 10,000) of features for a single image.
 
-\begin{equation}
-a = b + c
-\label{eq:one}
-\end{equation}
-
-\section*{Interesting Implementation Detail}
-
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-My code snippet highlights an interesting point.
-\begin{lstlisting}[style=Matlab-editor]
-one = 1;
-two = one + one;
-if two == 2
-    disp( 'This computer is not broken.' );
-end
-\end{lstlisting}
-
-\section*{A Result}
+\section*{Feature Descriptor Extraction}
+From the previous step, we have extracted the key points, whose descriptors we want to compute. Here, we use a simplified version of the SIFT descriptor. The process is as follows:
 
 \begin{enumerate}
-    \item Result 1 was a total failure, because...
-    \item Result 2 (Figure~\ref{fig:result1}, left) was surprising, because...
-    \item Result 3 (Figure~\ref{fig:result1}, right) blew my socks off, because...
+    \item For every key point:
+    \item Get a 16 x 16 pixel window with the key point at the center of the window.
+    \item Divide the window into sixteen 4 x 4 subwindows.
+    \item Compute each pixels' gradients(direction, magnitude) and generate 8-bin histogram according to the angle of direction for each subwindow.
+    \item Apply gaussian filter to the magnitudes of gradients for each subwindow.
+    \item Flatten the 8-bin histograms into a 128 dimension vector.
+    \item Clamp and resize the descriptor appropriately.
 \end{enumerate}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=5cm]{placeholder.jpg}
-    \includegraphics[width=5cm]{placeholder.jpg}
-    \caption{\emph{Left:} My result was spectacular. \emph{Right:} Curious.}
-    \label{fig:result1}
-\end{figure}
+Then, we finally have feature descriptors for every keypoint. One thing I was particularly curious about was how to define the descriptor for keypoints that is too close to the edge or corner of the image. It is not possible to have a regular 4 x 4 window that has the keypoint at the center for those kinds of keypoints. So I decided that those points would have a zero(0) vector. However, a method that more accurately describes the keypoint would further increase the accuracy.
 
-My results are summarized in Table~\ref{tab:table1}.
+\section*{Matching Features}
+At this point, we have extracted keypoints and their corresponding descriptors from an image. All of the process so far is done independently on a single image, and not in image pairs. Once we have descriptors for two images, it is time to match the descriptors. In the matching algorithm, I simply use a double nested for loop. For each descriptor in one image, we iterate through all of the descriptors in the other image. We compute the euclidean distance between them and sort the descriptors by distance. The descriptor with the lowest distance is chosen as the matching pair.
 
-\begin{table}[h]
-    \centering
-    \begin{tabular}{lr}
-        \toprule
-        Condition & Time (seconds) \\
-        \midrule
-        Test 1 & 1 \\
-        Test 2 & 1000 \\
-        \bottomrule
-    \end{tabular}
-    \caption{Stunning revelation about the efficiency of my code.}
-    \label{tab:table1}
-\end{table}
+I have attempted to use Nearest Neighbour Distance Ratio and a threshold ratio to filter ambiguous matches, but too many pairs were being discarded because their ratios were very close to being 1. Setting the threshold to 1 produced lots of matching pairs and yielded high accuracy for the top 100 confident pairs, but at the same time there were lots of mismatches as well.
+
+\section*{Results}
+Applying the implemented algorithm on the given Notre Dame image pairs produced the following results. With a cornerness threshold of 1000, a sliding window size of 5, the algorithm has produced a total of 4292 matches. 1836 out of them were good matches, while the other 2456 were bad matches. The total accuracy was 42.78\%, and the most confident 100 pairs produced an accuracy of 93\%.
+
+The algorithm applied to other image pairs have produced very disappointing outputs. To start with, not many keypoints were extracted from the given inputs \emph{Mount Rushmore} and \emph{Gaudi's Episcopal Palace}. For the Mount Rushmore image pair, one image produced 10978 keypoints, but the other had only 122 keypoints. On top of that, not a lot of matches were produced as well, thus leading to an accuracy of nearly 0 percent. Therefore, improving the keypoint detection for images like these two will be the next challenge for this algorithm.
 
 \end{document}
