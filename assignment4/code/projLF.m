@@ -33,7 +33,7 @@ maxPtsEval = 100;
 cheatInterestPoints = false;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Notre Dame de Paris
+% Notre Dame de Paris
 % Easiest
 disp( 'Notre Dame de Paris' );
 image1 = imread('../data/NotreDame/921919841_a30df938f2_o.jpg');
@@ -57,7 +57,7 @@ if ~cheatInterestPoints
     [x2, y2] = get_interest_points(image2, descriptor_window_image_width);
     finish = toc;
     fprintf("%.3f seconds for image2 interest points computation\n", finish);
-    
+
 %     disp(x1);
     fprintf("Feature point extraction finished\n");
     fprintf("%d points from image1\n", size(x1, 1));
@@ -107,27 +107,52 @@ image2 = im2single( imresize( rgb2gray(image2), scale_factor, 'bilinear') );
 % Task: implement the following three fuctions
 % 1) Find distinctive interest points in each image. Szeliski 4.1.1
 if ~cheatInterestPoints
+    fprintf("Computing image1 interest points...\n");
+    tic;
     [x1, y1] = get_interest_points(image1, descriptor_window_image_width);
+    finish = toc;
+    fprintf("%.3f seconds for image1 interest points computation\n", finish);
+
+    fprintf("Computing image2 interest points...\n");
+    tic;
     [x2, y2] = get_interest_points(image2, descriptor_window_image_width);
+    finish = toc;
+    fprintf("%.3f seconds for image2 interest points computation\n", finish);
+
+    fprintf("Feature point extraction finished\n");
+    fprintf("%d points from image1\n", size(x1, 1));
+    fprintf("%d points from image2\n", size(x2, 1));
 else
     % Use cheat_interest_points only for development and debugging!
     [x1, y1, x2, y2] = cheat_interest_points(eval_file, scale_factor, image1, image2, descriptor_window_image_width);
 end
 
 % 2) Create feature descriptors at each interest point. Szeliski 4.1.2
+fprintf("Computing image1 descriptors...\n");
+tic
 [image1_features] = get_descriptors(image1, x1, y1, descriptor_window_image_width);
+finish = toc;
+fprintf("%.3f seconds for image1 descriptors computation\n", finish);
+
+fprintf("Computing image2 descriptors...\n");
+tic;
 [image2_features] = get_descriptors(image2, x2, y2, descriptor_window_image_width);
+finish = toc;
+fprintf("%.3f seconds for image1 descriptors computation\n", finish);
 
 % 3) Match features. Szeliski 4.1.3
+fprintf("Matching features...\n");
+tic;
 [matches, confidences] = match_features(image1_features, image2_features);
+finish = toc;
+fprintf("%.3f seconds for matching features\n", finish);
 
 % Evaluate matches
 [~,~,~,accMPEMR] = evaluate_correspondence(image1, image2, eval_file, scale_factor, ...
                         x1, y1, x2, y2, matches, confidences, ...
                         maxPtsEval, visualize, 'eval_MR.png' );
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Gaudi's Episcopal Palace
 % This pair is difficult
 disp( 'Gaudi''s Episcopal Palace' );
@@ -141,26 +166,49 @@ image2 = im2single( imresize( rgb2gray(image2), scale_factor, 'bilinear') );
 % Task: implement the following three fuctions
 % 1) Find distinctive interest points in each image. Szeliski 4.1.1
 if ~cheatInterestPoints
+    fprintf("Computing image1 interest points...\n");
+    tic;
     [x1, y1] = get_interest_points(image1, descriptor_window_image_width);
+    finish = toc;
+    fprintf("%.3f seconds for image1 interest points computation\n", finish);
+    fprintf("Computing image2 interest points...\n");
+    tic;
     [x2, y2] = get_interest_points(image2, descriptor_window_image_width);
+    finish = toc;
+    fprintf("%.3f seconds for image2 interest points computation\n", finish);
+    fprintf("Feature point extraction finished\n");
+    fprintf("%d points from image1\n", size(x1, 1));
+    fprintf("%d points from image2\n", size(x2, 1));
 else
     % Use cheat_interest_points only for development and debugging!
     [x1, y1, x2, y2] = cheat_interest_points(eval_file, scale_factor, image1, image2, descriptor_window_image_width);
 end
 
 % 2) Create feature descriptors at each interest point. Szeliski 4.1.2
+fprintf("Computing image1 descriptors...\n");
+tic
 [image1_features] = get_descriptors(image1, x1, y1, descriptor_window_image_width);
+finish = toc;
+fprintf("%.3f seconds for image1 descriptors computation\n", finish);
+fprintf("Computing image2 descriptors...\n");
+tic
 [image2_features] = get_descriptors(image2, x2, y2, descriptor_window_image_width);
+finish = toc;
+fprintf("%.3f seconds for image1 descriptors computation\n", finish);
 
 % 3) Match feature descriptors. Szeliski 4.1.3
+fprintf("Matching features...\n");
+tic;
 [matches, confidences] = match_features(image1_features, image2_features);
+finish = toc;
+fprintf("%.3f seconds for matching features\n", finish);
 
 % Evaluate matches
 [~,~,~,accMPEEG] = evaluate_correspondence(image1, image2, eval_file, scale_factor, ...
                         x1, y1, x2, y2, matches, confidences, ...
                         maxPtsEval, visualize, 'eval_EG.png' );
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Compute average accuracy
 accMPEAvg = (accMPEND + accMPEMR + accMPEEG) / 3;
 

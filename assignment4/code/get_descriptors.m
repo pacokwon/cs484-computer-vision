@@ -56,6 +56,19 @@ function [features] = get_features(image, x, y, descriptor_window_image_width)
 
 % if there are n feature points, return n x 128 matrix
 
+% image = padarray(image, [8 8], 0, 'both');
+% num_points = size(x, 1);
+% x = x + 8;
+% y = y + 8;
+% 
+% features = zeros(num_points, 256);
+% 
+% for i = 1:num_points
+%     window = image(x - 8 : x + 7, y - 8 : y + 7);
+%     reshaped = reshape(window', 1, []);
+%     features(i, :) = reshaped / norm(reshaped);
+% end
+
 num_points = size(x, 1);
 features = zeros(num_points, 128);
 features_len = 0;
@@ -135,5 +148,3 @@ end
 
 features = features(1:features_len, :); % trim potential zero rows
 end
-
-

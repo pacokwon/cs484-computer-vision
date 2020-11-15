@@ -37,7 +37,7 @@ function [x, y, confidence, scale, orientation] = get_interest_points(image, des
 % of cornerness.
 
 % calculate image derivatives
-threshold = 300; % notre dame - 1000
+threshold = 1000; % notre dame - 1000
 alpha = 0.04;
 
 sobel_x = [-1 0 1; -2 0 2; -1 0 1];
@@ -74,7 +74,7 @@ for h = 1 + window_half : height - window_half
 end
 
 % Non-maxima suppression
-sliding_window_size = 3; % notre dame - 5
+sliding_window_size = 5; % notre dame - 5
 sliding_window_half = (sliding_window_size - 1) / 2;
 max_elements_per_window = 2;
 
@@ -119,4 +119,3 @@ confidence = confidence(1:count, :);
 % - Mount Rushmore: ~3500 and ~4500
 % - Episcopal Gaudi: ~1000 and ~9000
 end
-

@@ -118,9 +118,20 @@ At this point, we have extracted keypoints and their corresponding descriptors f
 
 I have attempted to use Nearest Neighbour Distance Ratio and a threshold ratio to filter ambiguous matches, but too many pairs were being discarded because their ratios were very close to being 1. Setting the threshold to 1 produced lots of matching pairs and yielded high accuracy for the top 100 confident pairs, but at the same time there were lots of mismatches as well.
 
+\section*{A comparison between SIFT-like descriptor and Normalized patch}
+For performance comparison, I have also implemented a descriptor using normalized patches around the keypoint. This is a table describing the accuracy for the top 100 confident matches that each image produced per descriptor method.
+\begin{table}[]
+    \begin{tabular}{lllll}
+                         & Notre Dame & Mount Rushmore & Gaudi's Episcopal Palace &  \\
+    SIFT-like Descriptor & 93\%       & 0\%            & 0\%                      &  \\
+    Normalized Patch     & 0\%        & 0\%            & 0\%                      &  \\
+                         &            &                &                          &
+    \end{tabular}
+\end{table}
+
 \section*{Results}
 Applying the implemented algorithm on the given Notre Dame image pairs produced the following results. With a cornerness threshold of 1000, a sliding window size of 5, the algorithm has produced a total of 4292 matches. 1836 out of them were good matches, while the other 2456 were bad matches. The total accuracy was 42.78\%, and the most confident 100 pairs produced an accuracy of 93\%.
 
-The algorithm applied to other image pairs have produced very disappointing outputs. To start with, not many keypoints were extracted from the given inputs \emph{Mount Rushmore} and \emph{Gaudi's Episcopal Palace}. For the Mount Rushmore image pair, one image produced 10978 keypoints, but the other had only 122 keypoints. On top of that, not a lot of matches were produced as well, thus leading to an accuracy of nearly 0 percent. Therefore, improving the keypoint detection for images like these two will be the next challenge for this algorithm.
+The algorithm applied to other image pairs have produced very disappointing outputs. To start with, not many keypoints were extracted from the given inputs \emph{Mount Rushmore} and \emph{Gaudi's Episcopal Palace}. For the \emph{Mount Rushmore} image pair, one image produced 10978 keypoints, but the other had only 122 keypoints. On top of that, not a lot of matches were produced as well, thus leading to an accuracy of nearly 0 percent. For \emph{Gaudi's Episcopal Palace}, the algorithm produced about 69000, 730 keypoints respectively, and produced 498 bad matches. As mentioned before, the algorithm performs poorly for images that require more sophisticated invariances for scale, rotation and illumination. Therefore, improving the keypoint detection for images like these two will be the next challenge for this algorithm.
 
 \end{document}

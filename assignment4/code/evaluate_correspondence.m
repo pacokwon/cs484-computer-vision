@@ -19,10 +19,6 @@ function [numGoodMatches,numBadMatches,accuracyAll,accuracyMaxEval] = evaluate_c
 [~, ind] = sort(confidences, 'descend');
 matches = matches(ind,:);
 
-disp(matches);
-disp(x1i');
-disp(y1i');
-
 x1_est = x1i(matches(:,1));
 y1_est = y1i(matches(:,1));
 x2_est = x2i(matches(:,2));

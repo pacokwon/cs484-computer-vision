@@ -27,7 +27,7 @@ len1 = size(features1, 1);
 len2 = size(features2, 1);
 
 euclidean = @(f1, f2) (sqrt(sum((f1 - f2) .^ 2, 'all')));
-threshold = 1; % Lowe's NNDR threshold
+threshold = 1; % Lowe's NNDR threshold is 0.75
 
 matches = zeros(min(len1, len2), 2); % maximum number of matches
 confidences = zeros(min(len1, len2), 1); % maximum number of matches
