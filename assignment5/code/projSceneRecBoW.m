@@ -51,12 +51,12 @@ function projSceneRecBoW()
 %% Step 0: Set up parameters, vlfeat, category list, and image paths.
 
 % FEATURE = 'tiny image';
-% FEATURE = 'bag of words';
-FEATURE = 'placeholder';
+FEATURE = 'bag of words';
+% FEATURE = 'placeholder';
 
 % CLASSIFIER = 'nearest neighbor';
-% CLASSIFIER = 'support vector machine';
-CLASSIFIER = 'placeholder';
+CLASSIFIER = 'support vector machine';
+% CLASSIFIER = 'placeholder';
 
 data_path = '../data/'; 
 
@@ -97,6 +97,7 @@ fprintf('Getting paths and labels for all train and test data\n')
 
 fprintf('Using %s representation for images\n', FEATURE)
 
+tic;
 switch lower(FEATURE)    
     case 'tiny image'
         % YOU CODE get_tiny_images.m 
@@ -143,7 +144,7 @@ end
 
 fprintf('Using %s classifier to predict test set categories\n', CLASSIFIER)
 
-switch lower(CLASSIFIER)    
+switch lower(CLASSIFIER)   
     case 'nearest neighbor'
         % YOU CODE nearest_neighbor_classify.m 
         predicted_categories = nearest_neighbor_classify(train_image_feats, train_labels, test_image_feats);
@@ -161,6 +162,8 @@ switch lower(CLASSIFIER)
         error('Unknown classifier type')
 end
 
+t = toc;
+fprintf('Elapsed Time: %f seconds\n', t);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Step 3: Build a confusion matrix and score the recognition system

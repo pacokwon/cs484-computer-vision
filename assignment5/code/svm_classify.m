@@ -40,11 +40,7 @@ scores_aggregate = [];
 
 for i = 1:num_categories
     indices = double(strcmp(categories(i), train_labels));
-    for j = 1:N
-        if indices(j) == 0
-            indices(j) = -1;
-        end
-    end
+    indices(indices == 0) = -1;
 
     Mdl = fitclinear(train_image_feats, indices);
     score = Mdl.Beta' * test_image_feats' + Mdl.Bias;
