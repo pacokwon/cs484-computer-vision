@@ -24,33 +24,26 @@ function image_feats = get_bags_of_words(image_paths)
 % image.
 
 load('vocab.mat');
-vocab_size = size(vocab, 1);
+path_length = length(image_paths);
 
-image_feats = [];
-Mdl = KDTreeSearcher(vocab);
+image_feats = zeros(path_length, 200);
 
-for i = 1:length(image_paths)
+for i = 1:path_length
     fprintf('%d ', i);
-    img = single( imread(image_paths{i}) );
+    image = single(imread(image_paths{i}));
+    [height, width] = size(image);
+    [X, Y] = meshgrid(1:15:height, 1:15:width);
+    grid_points = [X(:), Y(:)];
+
+    hog_features = extractHOGFeatures(image, grid_points, 'CellSize', [10 10]);
+    M = size(hog_features, 1);
     
-    [~, SIFT_features] = vl_dsift(img, 'step', 3, 'size', 8);
+    for j = 1:M
+        dist_mat = pdist2(hog_features(j, :), single(vocab));
+        [~, minIdx] = min(dist_mat);
+        image_feats(i, minIdx) = image_feats(i, minIdx) + 1;  
+    end
 
-%     [height, width] = size(img);
-%     
-%     grid_x = 1:20:height;
-%     grid_y = 1:20:width;
-%     [X, Y] = meshgrid(grid_x, grid_y);
-%     grid_points = [X(:), Y(:)];
-% 
-%     hog_features = extractHOGFeatures(img, grid_points, 'CellSize', [16 16]);
-
-%     [index , ~] = vl_kdtreequery(forest , vocab', double(hog_features'));
-%     index = knnsearch(Mdl, double(hog_features));
-    index = knnsearch(Mdl, double(SIFT_features'));
-
-    histogram = hist(double(index), vocab_size);
-    normalized_histogram = feature_hist ./ sum(feature_hist);
-    
-    image_feats(i, :) = normalized_histogram;
+    image_feats(i, :) = image_feats(i, :) / norm(image_feats(i, :));
 end
 fprintf('\n');

@@ -17,28 +17,23 @@
 % - 'vocab' should be vocab_size x descriptor length. Each row is a cluster centroid / visual word.
 
 function vocab = build_vocabulary(image_paths, vocab_size)
+paths_length = length(image_paths);
 features = [];
-disp(vocab_size);
 
-for i = 1:length(image_paths)
+for i = 1:paths_length
     img = single( imread(image_paths{i}) );
     
-%     [height, width] = size(img);
-%     
-%     grid_x = 1:20:height;
-%     grid_y = 1:20:width;
-%     [X, Y] = meshgrid(grid_x, grid_y);
-%     grid_points = [X(:), Y(:)];
-%     
-%     hog_features = extractHOGFeatures(img, grid_points, 'CellSize', [16 16]);
-%     features = [features; hog_features];
-
-    [~, SIFT_features] = vl_dsift(img, 'fast', 'step', 15, 'size', 8);
-%     disp(size(SIFT_features));
-    features = [features; SIFT_features'];
+    [height, width] = size(img);
+    
+    grid_x = 1:15:height;
+    grid_y = 1:15:width;
+    [X, Y] = meshgrid(grid_x, grid_y);
+    grid_points = [X(:), Y(:)];
+    
+    hog_features = extractHOGFeatures(img, grid_points, 'CellSize', [10 10]);
+    features = [features; hog_features];
 end
 
 features = double(features);
 [~, centroids] = kmeans(features, vocab_size);
-% disp(centroids);
 vocab = centroids;
