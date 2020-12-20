@@ -34,7 +34,22 @@ function predicted_categories = svm_classify(train_image_feats, train_labels, te
 % unique() is used to get the category list from the observed training category list. 
 % 'categories' will not be in the same order as unique() sorts them. This shouldn't really matter, though.
 categories = unique(train_labels);
+N = size(train_labels, 1);
 num_categories = length(categories);
+scores_aggregate = [];
 
+for i = 1:num_categories
+    indices = double(strcmp(categories(i), train_labels));
+    for j = 1:N
+        if indices(j) == 0
+            indices(j) = -1;
+        end
+    end
 
+    Mdl = fitclinear(train_image_feats, indices);
+    score = Mdl.Beta' * test_image_feats' + Mdl.Bias;
+    scores_aggregate = [scores_aggregate; score];
+end
 
+[~, max_indices] = max(scores_aggregate);
+predicted_categories = categories(max_indices');
