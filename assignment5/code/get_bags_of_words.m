@@ -23,9 +23,34 @@ function image_feats = get_bags_of_words(image_paths)
 % feature descriptors will look very different from a smaller version of the same
 % image.
 
-load('vocab.mat')
+load('vocab.mat');
 vocab_size = size(vocab, 1);
 
+image_feats = [];
+Mdl = KDTreeSearcher(vocab);
 
+for i = 1:length(image_paths)
+    fprintf('%d ', i);
+    img = single( imread(image_paths{i}) );
+    
+    [~, SIFT_features] = vl_dsift(img, 'step', 3, 'size', 8);
 
+%     [height, width] = size(img);
+%     
+%     grid_x = 1:20:height;
+%     grid_y = 1:20:width;
+%     [X, Y] = meshgrid(grid_x, grid_y);
+%     grid_points = [X(:), Y(:)];
+% 
+%     hog_features = extractHOGFeatures(img, grid_points, 'CellSize', [16 16]);
 
+%     [index , ~] = vl_kdtreequery(forest , vocab', double(hog_features'));
+%     index = knnsearch(Mdl, double(hog_features));
+    index = knnsearch(Mdl, double(SIFT_features'));
+
+    histogram = hist(double(index), vocab_size);
+    normalized_histogram = feature_hist ./ sum(feature_hist);
+    
+    image_feats(i, :) = normalized_histogram;
+end
+fprintf('\n');
