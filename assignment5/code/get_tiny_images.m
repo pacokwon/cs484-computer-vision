@@ -10,6 +10,18 @@ function image_feats = get_tiny_images(image_paths)
 % image_feats is an N x d matrix of resized and then vectorized tiny
 %  images. E.g. if the images are resized to 16x16, d would equal 256.
 
+length = size(image_paths, 1);
+image_feats = zeros(length, 256);
+for i = 1:length
+    image = im2double(imread(string(image_paths(i))));
+    resized_image = imresize(image, [16 16]);
+    image_mean = mean(resized_image, 'all');
+    normalized_image = resized_image - image_mean;
+    feature = reshape(normalized_image', 1, []);
+    image_feats(i, :) = feature / norm(feature);
+end
+
+
 % To build a tiny image feature, simply resize the original image to a very
 % small square resolution, e.g. 16x16. You can either resize the images to
 % square while ignoring their aspect ratio or you can crop the center
@@ -30,8 +42,6 @@ function image_feats = get_tiny_images(image_paths)
 %   computing the _mean tiny image_ and subtracting it (+ divide by
 %   variance of feature). This retains that signal, and just shifts
 %   the feature space into an easier number space on which to learn.
-
-
 
 % Suggested functions: imread, imresize
 
