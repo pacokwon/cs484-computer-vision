@@ -6,11 +6,11 @@
 % The original code is written by Prof. James Tompkin (james_tompkin@brown.edu).
 % The second version is revised by Prof. Min H. Kim (minhkim@kaist.ac.kr).
 %
-% This is a LaTeX document. LaTeX is a markup language for producing 
-% documents. Your task is to fill out this document, then to compile 
-% it into a PDF document. 
+% This is a LaTeX document. LaTeX is a markup language for producing
+% documents. Your task is to fill out this document, then to compile
+% it into a PDF document.
 %
-% 
+%
 % TO COMPILE:
 % > pdflatex thisfile.tex
 %
@@ -20,10 +20,10 @@
 %   macTex (http://www.tug.org/mactex/) for macOS users.
 %   And TeXstudio(http://www.texstudio.org/) for latex editor.
 %   You should install both compiler and editor for editing latex.
-%   The another option is Overleaf (https://www.overleaf.com/) which is 
+%   The another option is Overleaf (https://www.overleaf.com/) which is
 %   an online latex editor.
 %
-% If you need help with LaTeX, please come to office hours. 
+% If you need help with LaTeX, please come to office hours.
 % Or, there is plenty of help online:
 % https://en.wikibooks.org/wiki/LaTeX
 %
@@ -33,7 +33,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 % How to include two graphics on the same line:
-% 
+%
 % \includegraphics[width=0.49\linewidth]{yourgraphic1.png}
 % \includegraphics[width=0.49\linewidth]{yourgraphic2.png}
 %
@@ -42,7 +42,7 @@
 % \begin{equation}
 % y = mx+c
 % \end{equation}
-% 
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[11pt]{article}
@@ -96,9 +96,7 @@
 \paragraph{Q1:} Given a linear classifier, how might we handle data that are not linearly separable? How does the \emph{kernel trick} help in these cases? (See course slides in supervised learning, plus your own research.)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{A1:} Your answer here.
-
-
+\paragraph{A1:} By transforming the given inputs appropriately, even a linear classifier can handle data that are not linearly separable. Once we know the lifting transformation $\phi(x)$ that transforms the input values to a higher dimension, we can then define a kernel function $K(x_i, x_j) = \phi(x_i)\cdot\phi(x_j)$. The outputs of the kernel function for each of the point pairs can then be fed into the linear classifier to yield classification results.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -106,30 +104,24 @@
 \paragraph{Q2:} In machine learning, what are bias and variance? When we evaluate a classifier, what are overfitting and underfitting, and how do these relate to bias and variance?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{A2:} Your answer here.
+\paragraph{A2:} In machine learning, bias represents how much we want to simplify the underlying function. For example, using a highly biased model for a certain task might make the predictions too simple. Variance represents how sensitive a model is to the training data (or data that it has seen). For example using a model with a very high variance might make the model not generalize on the data it has seen but try too hard to make itself fit into all of the data that it has seen.
 
-
+Overfitting is usually when a model too complex relative to the underlying function. It can be seen as having high variance and low bias, because even small changes to some points will result in relatively higher modifications to the model, due to lack of generalization. Underfitting is usually when a model is too simple compared to the underlying function. It can be seen as having low variance and high bias. In this case an overly generalized model like an underfitted one is prone to missing details in points and will yield high error rates.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % Please leave the pagebreak
 \pagebreak
-\paragraph{Q3:} The way that the bag of words representation handles the spatial layout of visual information can be both an advantage and a disadvantage. Describe an example scenario for each of these cases, plus describe a modification or additional algorithm which can overcome the disadvantage. 
+\paragraph{Q3:} The way that the bag of words representation handles the spatial layout of visual information can be both an advantage and a disadvantage. Describe an example scenario for each of these cases, plus describe a modification or additional algorithm which can overcome the disadvantage.
 
 How might we evaluate whether bag of words is a good model?
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\paragraph{A3:} Your answer here.
+\paragraph{A3:} I believe that an advantage of the bag of words representations is that it is intuitive and simple to implement. The fact that an image is represented by smaller patches that comprise the image itself is fairly straightforward, and using those smaller components to detect the bigger picture makes sense. However, a disadvantage of the bag of words approach is that it does not take into account the relative location information of the words. For example an image of a human face can be thought as having a nose, eyes, a mouth and etc. The bag of words approach deconstructs the image into those components, but it loses the layout of those components. So if there were an image that just places two eyes, a nose and a mouth in a horizontal line, the bag of words approach would not understand the difference.
 
+As mentioned before, the drawback of the bag of words is that the layout information of the visual words are lost during feature extraction. My general idea on how to make this better is to somehow include the layout information in the feature vector as well. However, this does seem complicated at first glance because the layout information is not just its position in the image, but the positioning it has relative to other distinct visual words as well. If we can make a robust feature that also has this spatial information as well, it would complement the drawbacks that were mentioned before.
 
-
+One method of evaluation that comes to my mind is to generate test datasets from existing test images, by producing feature histograms the same way the bag of words model would produce. With this histogram, we can generate arbitrary images that yields the same or similar(by adding some noise perhaps) histogram. These images will not make sense to the human eye, but these testing datasets will confuse bag of words models that fail to address the physical layout of visual words. Of course, other than this seemingly odd method, we can also use the regular way of computing error from regular images. However, if a bag of words model works sufficiently for these ordinary testing methods, using a method like the one mentioned here might help increase the accuracy of the model.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% If you really need extra space, uncomment here and use extra pages after the last question.
-% Please refer here in your original answer. Thanks!
-%\pagebreak
-%\paragraph{AX.X Continued:} Your answer continued here.
-
-
 
 \end{document}
